@@ -3,8 +3,8 @@
 /**
  * Plugin Name: My Dynamic Shortcodes
  * Description: Un plugin para crear shortcodes dinámicamente.
- * Version: 1.0
- * Author: Tu Nombre
+ * Version: 1.0.2
+ * Author: Cesar's Pinedo
  */
 
 // Evitar el acceso directo
