@@ -2,8 +2,8 @@
 /**
  * Plugin Name: Mi Plugin ErenDB Plugin Database
  * Description: Un plugin con interfaz de configuración para conectarse a una base de datos externa.
- * Version: 1.0
- * Author: Tu Nombre
+ * Version: 1.0.1
+ * Author: Cesar's Pinedo
  */
 
 // Evitar acceso directo al archivo
@@ -157,3 +157,40 @@ function mi_plugin_mostrar_categorias() {
 }
 add_shortcode('mi_plugin_mostrar_categorias', 'mi_plugin_mostrar_categorias');
 
+// Registramos el shortcode para mostrar el contenido de un post por su slug
+function mostrar_post_por_slug($atts) {
+    global $wpdb;
+
+    // Extraemos los atributos del shortcode
+    $atts = shortcode_atts(
+        array(
+            'slug' => '', // Slug del post (por defecto está vacío)
+        ),
+        $atts,
+        'mostrar_post' // Nombre del shortcode
+    );
+
+    // Comprobamos si se ha proporcionado un slug
+    if (empty($atts['slug'])) {
+        return 'Por favor, proporciona un slug de post válido.';
+    }
+
+    // Consultamos la base de datos por el slug del post
+    $post = $wpdb->get_row(
+        $wpdb->prepare(
+            "SELECT * FROM wp_blog_posts WHERE slug = %s AND status = 'published'",
+            $atts['slug']
+        )
+    );
+
+    // Verificamos si se ha encontrado el post
+    if ($post) {
+        // Retornamos el contenido del post
+        return '<h2>' . esc_html($post->title) . '</h2>' . '<p>' . nl2br(esc_html($post->content)) . '</p>';
+    } else {
+        return 'No se encontró el post con el slug especificado o el post no está publicado.';
+    }
+}
+
+// Registramos el shortcode
+add_shortcode('mostrar_post', 'mostrar_post_por_slug');
